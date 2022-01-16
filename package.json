@@ -1,0 +1,24 @@
+{
+  "name": "event_tracker",
+  "version": "1.0.0",
+  "description": "Social events tracking application",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "NodeJs",
+    "Express",
+    "MongoDB",
+    "Mongoose",
+    "Event",
+    "Event_tracking"
+  ],
+  "author": "Bereket",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^12.0.4",
+    "express": "^4.17.2",
+    "mongoose": "^6.1.6"
+  }
+}
