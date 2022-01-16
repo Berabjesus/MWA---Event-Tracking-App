@@ -3,7 +3,8 @@ const path = require("path")
 const {
   getResponse,
   postResponse,
-  putResponse
+  putResponse,
+  deleteResponse
 } = require("../utils/responseHandler")
 
 const Event = mongoose.model('Event');
@@ -39,7 +40,7 @@ module.exports.getAll = (req, res) => {
 
   Event.find().skip(offset).limit(count).exec(function (err, data) {
     console.log("DATABASE CALL : @ " + path.basename(__filename) + " : with count " + count, " offset " + offset);
-    
+
     const response = getResponse(err, data);
     res.status(response.status).json(response.message);
   });
@@ -52,11 +53,12 @@ module.exports.getOne = (req, res) => {
   })
 }
 
-module.exports.addOne = (req, res) => {
+module.exports.create = (req, res) => {
   const event = {
     name: req.body.name,
     description: req.body.description,
-    location: req.body.location
+    location: req.body.location,
+    attendees: req.body.attendees
   }
 
   Event.create(event, function (err, data) {
@@ -67,7 +69,7 @@ module.exports.addOne = (req, res) => {
 
 module.exports.fullUpdate = (req, res) => {
   const eventId = req.params.eventId  
-  Event.findById(eventId).exec(function (err, data) {
+  Event.findById(eventId).select('-attendees').exec(function (err, data) {
     const response = getResponse(err, data)
     if (response.status >= 400) {
       res.status(response.status).json(response.message);
@@ -84,5 +86,13 @@ module.exports.fullUpdate = (req, res) => {
       res.status(response.status).json(response.message);
     });
 
+  })
+}
+
+module.exports.delete = (req, res) => {
+  const eventId = req.params.eventId  
+  Event.findByIdAndRemove(eventId).exec(function (err, data) {
+    const response = deleteResponse(err, data)
+    res.status(response.status).json(response.message);
   })
 }

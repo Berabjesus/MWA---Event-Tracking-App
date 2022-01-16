@@ -53,3 +53,26 @@ module.exports.putResponse = (err, data) => {
 
   return response;
 };
+
+module.exports.deleteResponse = (err, data) => {
+  const response = {
+    status: 204,
+    message: data,
+  };
+
+  if (err) {
+    console.log("ERROR : @ " + fileName + " : --" + err);
+    response.status = 500;
+    response.message = err;
+  } else if (!data) {
+    console.log("WARNING : @ " + fileName + " : -- data not found");
+    response.status = 404;
+    response.message = {
+      message: "No data found"
+    };
+  } else {
+    console.log("INFO : @ " + fileName + " : -- data deleted");
+  }
+
+  return response;
+};
