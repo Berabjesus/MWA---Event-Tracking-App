@@ -10,7 +10,7 @@ app.use(express.urlencoded({extended: true}))
 
 app.use(express.static(path.join(__dirname, "public")))
 
-// app.use("/api", routes)
+app.use("/api", routes)
 
 app.get('*', function(req, res) {
   res.sendFile(path.join(__dirname, 'public/404.html'));
