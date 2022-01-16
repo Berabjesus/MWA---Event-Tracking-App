@@ -1,10 +1,8 @@
 const express = require("express");
 const router = express.Router();
+const eventsController = require("../controllers/events.controller")
 
 router.route("/events")
-      .get(function(req, res) {
-        console.log(req);
-        res.status(200).json({"msg" : "get all events"})
-      })
-
+      .get(eventsController.getAll)
+      .post(eventsController.addOne)
 module.exports = router;
