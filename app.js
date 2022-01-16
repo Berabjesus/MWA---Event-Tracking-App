@@ -10,6 +10,12 @@ app.use(express.urlencoded({extended: true}))
 
 app.use(express.static(path.join(__dirname, "public")))
 
+// app.use("/api", routes)
+
+app.get('*', function(req, res) {
+  res.sendFile(path.join(__dirname, 'public/404.html'));
+});
+
 const server = app.listen(process.env.PORT, function() {
-  console.log(`listening on port ${server.address().port}`);
+  console.log(process.env.MSG_SERVER_START + server.address().port);
 })
