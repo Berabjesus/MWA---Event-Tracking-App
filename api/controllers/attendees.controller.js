@@ -10,7 +10,7 @@ const {
 } = require("../helpers/responseHandler")
 
 const notFoundMessage = (attendeeId) => {
-  return {"message": process.env.ATTENDEE_NOT_FOUND_MESSGAE + attendeeId}
+  return {"message": "No attendees exist with the following id" + attendeeId}
 }
 const Event = mongoose.model('Event');
 
