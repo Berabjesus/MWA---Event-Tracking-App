@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const path = require("path")
+const {validateForPagination} = require("../helpers/validator")
+
 const {
   getResponse,
   postResponse,
@@ -7,6 +9,9 @@ const {
   deleteResponse
 } = require("../helpers/responseHandler")
 
+const notFoundMessage = (attendeeId) => {
+  return {"message": process.env.ATTENDEE_NOT_FOUND_MESSGAE + attendeeId}
+}
 const Event = mongoose.model('Event');
 
 module.exports.getAll = (req, res) => {
@@ -21,24 +26,15 @@ module.exports.getAll = (req, res) => {
     offset = parseInt(req.query.offset);
   }
 
-  if (isNaN(count) || isNaN(offset)) {
-    console.log("ERROR : @ " + path.basename(__filename) + " -- Query parameters should be numbers");
-
-    res.status(400).json({
-      message: " Query parameters should be numbers "
-    });
+  if (!validateForPagination(count,offset,process.env.GET_ALL_ATTENDEES_MAX_COUNT, res)) {
     return;
   }
 
-  if (count > process.env.GET_ALL_ATTENDEES_MAX_COUNT) {
-    console.log("ERROR : @ " + path.basename(__filename) + " -- count exceeds the the max count");
+  _findById(Event, count, offset,eventId, res)
 
-    res.status(400).json({
-      message: "Cannot exceed count of " + process.env.GET_ALL_ATTENDEES_MAX_COUNT,
-    });
-    return;
-  }
+};
 
+const _findById = (Event, count, offset, eventId, res) => {
   Event.findById(eventId).select('attendees').slice('attendees', [offset, count]).exec(function (err, data) {
     const response = getResponse(err, data)
     if (response.status === 200) {
@@ -46,8 +42,7 @@ module.exports.getAll = (req, res) => {
     }
     res.status(response.status).json(response.message);
   })
-
-};
+}
 
 module.exports.getOne = (req, res) => {
   const eventId = req.params.eventId
@@ -63,9 +58,7 @@ module.exports.getOne = (req, res) => {
 
     if (!response.message) {
       response.status = 404
-      response.message = {
-        "message": "No attendee with id " + attendeeId + " found"
-      }
+      response.message = notFoundMessage(attendeeId)
     }
 
     res.status(response.status).json(response.message);
@@ -109,7 +102,7 @@ module.exports.fullUpdate = (req, res) => {
 
     const attendee = data.attendees.id(attendeeId)
     if (!attendee) {
-      res.status(404).json({ "message": "No attendee with id " + attendeeId + " found" });
+      res.status(404).json(notFoundMessage(attendeeId));
       return;
     }
     attendee.name = req.body.name
@@ -135,7 +128,7 @@ module.exports.delete = (req, res) => {
 
     const attendee = data.attendees.id(attendeeId)
     if (!attendee) {
-      res.status(404).json({ "message": "No attendee with id " + attendeeId + " found" });
+      res.status(404).json(notFoundMessage(attendeeId));
       return;
     }
     

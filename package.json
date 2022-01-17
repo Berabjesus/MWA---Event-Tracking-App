@@ -1,5 +1,5 @@
 {
-  "name": "event_tracker",
+  "name": "event_tracker PHP",
   "version": "1.0.0",
   "description": "Social events tracking application",
   "main": "app.js",
@@ -16,7 +16,7 @@
     "Event",
     "Event_tracking"
   ],
-  "author": "Bereket",
+  "author": "Bereket Beshane",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^12.0.4",

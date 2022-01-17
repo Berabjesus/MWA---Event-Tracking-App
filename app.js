@@ -14,7 +14,7 @@ app.use(express.static(path.join(__dirname, "public")))
 app.use("/api", routes)
 
 app.get('*', function(req, res) {
-  res.sendFile(path.join(__dirname, 'public/404.html'));
+  res.sendFile(path.join(__dirname, process.env.NOT_FOUND_DOC));
 });
 
 const server = app.listen(process.env.PORT, function() {

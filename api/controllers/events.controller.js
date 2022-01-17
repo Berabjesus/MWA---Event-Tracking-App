@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const path = require("path")
+const {validateForPagination} = require("../helpers/validator")
 const {
   getResponse,
   postResponse,
@@ -20,31 +21,21 @@ module.exports.getAll = (req, res) => {
     offset = parseInt(req.query.offset);
   }
 
-  if (isNaN(count) || isNaN(offset)) {
-    console.log("ERROR : @ " + path.basename(__filename) + " -- Query parameters should be numbers");
-
-    res.status(400).json({
-      message: " Query parameters should be numbers "
-    });
+  if (!validateForPagination(count,offset,process.env.GET_ALL_ATTENDEES_MAX_COUNT, res)) {
     return;
   }
 
-  if (count > process.env.GET_ALL_EVENTS_MAX_COUNT) {
-    console.log("ERROR : @ " + path.basename(__filename) + " -- count exceeds the the max count");
+  _find(Event, count, offset, res)
+};
 
-    res.status(400).json({
-      message: "Cannot exceed count of " + process.env.GET_ALL_EVENTS_MAX_COUNT,
-    });
-    return;
-  }
-
+const _find = (Event, count, offset, res) => {
   Event.find().select('-attendees').skip(offset).limit(count).exec(function (err, data) {
     console.log("DATABASE CALL : @ " + path.basename(__filename) + " : with count " + count, " offset " + offset);
 
     const response = getResponse(err, data);
     res.status(response.status).json(response.message);
   });
-};
+}
 
 module.exports.getOne = (req, res) => {
   Event.findById(req.params.eventId).exec(function (err, data) {
