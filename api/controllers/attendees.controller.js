@@ -10,6 +10,7 @@ const {
 const Event = mongoose.model('Event');
 
 module.exports.getAll = (req, res) => {
+  const eventId = req.params.eventId
   let count = parseInt(process.env.GET_ALL_ATTENDEES_DEFAULT_COUNT);
   let offset = parseInt(process.env.GET_ALL_ATTENDEES_DEFAULT_OFFSET);
 
@@ -38,7 +39,7 @@ module.exports.getAll = (req, res) => {
     return;
   }
 
-  Event.findById(req.params.eventId).select('attendees').slice('attendees', [offset, count]).exec(function (err, data) {
+  Event.findById(eventId).select('attendees').slice('attendees', [offset, count]).exec(function (err, data) {
     const response = getResponse(err, data)
     if (response.status === 200) {
       response.message = response.message.attendees
@@ -49,19 +50,21 @@ module.exports.getAll = (req, res) => {
 };
 
 module.exports.getOne = (req, res) => {
-  Event.findById(req.params.eventId).select('attendees').exec(function (err, data) {
+  const eventId = req.params.eventId
+  const attendeeId = req.params.attendeeId
+  Event.findById(eventId).select('attendees').exec(function (err, data) {
     const response = getResponse(err, data)
     if (response.status >= 400) {
       res.status(response.status).json(response.message);
       return;
     }
 
-    response.message = response.message.attendees.id(req.params.attendeeId)
+    response.message = response.message.attendees.id(attendeeId)
 
     if (!response.message) {
       response.status = 404
       response.message = {
-        "message": "No attendee with id " + req.params.attendeeId + " found"
+        "message": "No attendee with id " + attendeeId + " found"
       }
     }
 
@@ -70,7 +73,9 @@ module.exports.getOne = (req, res) => {
 }
 
 module.exports.create = (req, res) => {
-  Event.findById(req.params.eventId).select('attendees').exec(function (err, data) {
+  const eventId = req.params.eventId
+
+  Event.findById(eventId).select('attendees').exec(function (err, data) {
 
     const response = getResponse(err, data)
     if (response.status >= 400) {
@@ -94,21 +99,25 @@ module.exports.create = (req, res) => {
 
 module.exports.fullUpdate = (req, res) => {
   const eventId = req.params.eventId
-  Event.findById(eventId).select('-attendees').exec(function (err, data) {
+  const attendeeId = req.params.attendeeId
+  Event.findById(eventId).select('attendees').exec(function (err, data) {
     const response = getResponse(err, data)
     if (response.status >= 400) {
       res.status(response.status).json(response.message);
       return;
     }
 
-    data.name = req.body.name
-    data.description = req.body.description
-    data.location = req.body.location
+    const attendee = data.attendees.id(attendeeId)
+    if (!attendee) {
+      res.status(404).json({ "message": "No attendee with id " + attendeeId + " found" });
+      return;
+    }
+    attendee.name = req.body.name
+    attendee.rsvp = req.body.rsvp
 
     data.save(function (err, data) {
       const response = putResponse(err, data);
-
-      res.status(response.status).json(response.message);
+      res.status(response.status).json(attendee);
     });
 
   })
