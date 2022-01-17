@@ -19,6 +19,7 @@ router.route("/events/:eventId/attendees")
 router.route("/events/:eventId/attendees/:attendeeId")
   .get(attendeesController.getOne)
   .put(attendeesController.fullUpdate)
+  .delete(attendeesController.delete)
 
 
 module.exports = router;

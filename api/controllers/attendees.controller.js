@@ -125,8 +125,25 @@ module.exports.fullUpdate = (req, res) => {
 
 module.exports.delete = (req, res) => {
   const eventId = req.params.eventId
-  Event.findByIdAndRemove(eventId).exec(function (err, data) {
-    const response = deleteResponse(err, data)
-    res.status(response.status).json(response.message);
+  const attendeeId = req.params.attendeeId
+  Event.findById(eventId).select('attendees').exec(function (err, data) {
+    const response = getResponse(err, data)
+    if (response.status >= 400) {
+      res.status(response.status).json(response.message);
+      return;
+    }
+
+    const attendee = data.attendees.id(attendeeId)
+    if (!attendee) {
+      res.status(404).json({ "message": "No attendee with id " + attendeeId + " found" });
+      return;
+    }
+    
+    data.attendees.id(attendeeId).remove()
+
+    data.save(function (err, data) {
+      const response = deleteResponse(err, data);
+      res.status(response.status).json(response.message);
+    });
   })
 }
