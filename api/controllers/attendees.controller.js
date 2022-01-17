@@ -5,7 +5,7 @@ const {
   postResponse,
   putResponse,
   deleteResponse
-} = require("../utils/responseHandler")
+} = require("../helpers/responseHandler")
 
 const Event = mongoose.model('Event');
 
@@ -38,7 +38,7 @@ module.exports.getAll = (req, res) => {
     return;
   }
 
-  Event.findById(req.params.eventId).select('attendees').slice('attendees', [offset,count]).exec(function (err, data) {
+  Event.findById(req.params.eventId).select('attendees').slice('attendees', [offset, count]).exec(function (err, data) {
     const response = getResponse(err, data)
     if (response.status === 200) {
       response.message = response.message.attendees
@@ -49,14 +49,29 @@ module.exports.getAll = (req, res) => {
 };
 
 module.exports.getOne = (req, res) => {
-  Event.findById(req.params.eventId).exec(function (err, data) {
+  Event.findById(req.params.eventId).select('attendees').exec(function (err, data) {
     const response = getResponse(err, data)
+    if (response.status >= 400) {
+      res.status(response.status).json(response.message);
+      return;
+    }
+
+    response.message = response.message.attendees.id(req.params.attendeeId)
+
+    if (!response.message) {
+      response.status = 404
+      response.message = {
+        "message": "No attendee with id " + req.params.attendeeId + " found"
+      }
+    }
+
     res.status(response.status).json(response.message);
   })
 }
 
 module.exports.create = (req, res) => {
-  Event.findById(req.params.eventId).exec(function (err, data) {
+  Event.findById(req.params.eventId).select('attendees').exec(function (err, data) {
+
     const response = getResponse(err, data)
     if (response.status >= 400) {
       res.status(response.status).json(response.message);
@@ -69,17 +84,16 @@ module.exports.create = (req, res) => {
     }
 
     data.attendees.push(attendee);
-    console.log(data);
-    data.save(function (err, doc) {
-      const response = postResponse(err, doc);
+    data.save(function (err, data) {
+      const response = postResponse(err, data);
 
-      res.status(response.status).json(response.message);
+      res.status(response.status).json(attendee);
     });
   })
 }
 
 module.exports.fullUpdate = (req, res) => {
-  const eventId = req.params.eventId  
+  const eventId = req.params.eventId
   Event.findById(eventId).select('-attendees').exec(function (err, data) {
     const response = getResponse(err, data)
     if (response.status >= 400) {
@@ -91,8 +105,8 @@ module.exports.fullUpdate = (req, res) => {
     data.description = req.body.description
     data.location = req.body.location
 
-    data.save(function (err, doc) {
-      const response = putResponse(err, doc);
+    data.save(function (err, data) {
+      const response = putResponse(err, data);
 
       res.status(response.status).json(response.message);
     });
@@ -101,7 +115,7 @@ module.exports.fullUpdate = (req, res) => {
 }
 
 module.exports.delete = (req, res) => {
-  const eventId = req.params.eventId  
+  const eventId = req.params.eventId
   Event.findByIdAndRemove(eventId).exec(function (err, data) {
     const response = deleteResponse(err, data)
     res.status(response.status).json(response.message);

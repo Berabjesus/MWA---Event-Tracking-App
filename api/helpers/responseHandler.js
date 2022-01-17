@@ -12,17 +12,15 @@ module.exports.getResponse = (err, data) => {
     response.status = 500;
     response.message = err;
   } else if (!data) {
-    console.log("WARNING : @ " + fileName + " : -- data not found");
+    console.log("WARNING : @ " + fileName + " : -- Event not found");
     response.status = 404;
     response.message = {
-      message: "No data found"
+      message: "No Event found"
     };
   }
 
   return response;
 };
-
-
 
 module.exports.postResponse = function (err, data) {
   const response = {

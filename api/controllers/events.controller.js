@@ -5,7 +5,7 @@ const {
   postResponse,
   putResponse,
   deleteResponse
-} = require("../utils/responseHandler")
+} = require("../helpers/responseHandler")
 
 const Event = mongoose.model('Event');
 
@@ -80,8 +80,8 @@ module.exports.fullUpdate = (req, res) => {
     data.description = req.body.description
     data.location = req.body.location
 
-    data.save(function (err, doc) {
-      const response = putResponse(err, doc);
+    data.save(function (err, data) {
+      const response = putResponse(err, data);
 
       res.status(response.status).json(response.message);
     });

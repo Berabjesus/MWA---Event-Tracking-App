@@ -16,4 +16,8 @@ router.route("/events/:eventId/attendees")
   .get(attendeesController.getAll)
   .post(attendeesController.create)
 
+router.route("/events/:eventId/attendees/:attendeeId")
+  .get(attendeesController.getOne)
+
+
 module.exports = router;
