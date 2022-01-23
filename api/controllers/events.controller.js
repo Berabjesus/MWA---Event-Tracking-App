@@ -7,7 +7,8 @@ const {
   deleteResponse
 } = require("../helpers/response.helper");
 const { infoLogger } = require('../helpers/logger.helper');
-const path = require("path")
+const path = require("path");
+const req = require('express/lib/request');
 const fileName = path.basename(__filename)
 
 const Event = mongoose.model('Event');
@@ -35,11 +36,16 @@ const getAll = (req, res) => {
     return;
   }
 
-  _find(Event, count, offset, res)
+  _find(Event, count, offset, req, res)
 };
 
-const _find = (Event, count, offset, res) => {
-  Event.find().select('-attendees').skip(offset).limit(count).exec(function (err, event) {
+const _find = (Event, count, offset, req, res) => {
+  let query = {}
+  if (req.query.search) {
+    query = {name : req.query.search}
+  }
+
+  Event.find(query).select('-attendees').skip(offset).limit(count).exec(function (err, event) {
     infoLogger(fileName, process.env.INFO_MSG_DB_QUERY_MADE)
     const response = getResponse(err, event, fileName);
     res.status(response.status).json(response.message);
