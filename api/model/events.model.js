@@ -31,10 +31,10 @@ const eventsSchema = new mongoose.Schema({
       type: String,
       required: true
     },
-    // coordinates: {
-    //   type: [Number],
-    //   index: "2dsphere"
-    // }
+    coordinates: {
+      type: [Number],
+      index: "2dsphere"
+    }
   },
   attendees: [attendeeSchema]
 }, {

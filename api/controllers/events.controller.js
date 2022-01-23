@@ -65,6 +65,10 @@ const _runGeoQuery = function (req, res) {
   const distance = parseFloat(req.query.dist, 10);
   const maxDistance = parseFloat(process.env.GEO_SEARCH_MAX_DIST, 10)
 
+  if (longitude < -180 || longitude > 180 || latitude < -90 || latitude > 90) {
+    res.status(400).json({error: "Coordinte error"})
+  }
+
   if (distance > maxDistance) {
     const message = process.env.ERROR_MSG_EXCEED_MAX_DISTANCE
     res.status(400).json(message)
@@ -109,6 +113,7 @@ const getOne = (req, res) => {
 }
 
 const addOne = (req, res) => {
+  console.log(req.body.location);
   const event = {
     name: req.body.name,
     description: req.body.description,

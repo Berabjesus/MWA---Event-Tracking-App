@@ -5,11 +5,13 @@ import { HomeComponent } from "./home/home.component";
 import { SearchComponent } from "./search/search.component";
 import { EventsComponent } from "./events/events.component";
 import { EventComponent } from "./event/event.component";
+import { CreateComponent } from "./create/create.component";
 
 const routes: Routes = [
   {path : '', component: HomeComponent},
   {path : 'events', component: EventsComponent},
   {path : 'events/:eventId', component: EventComponent},
+  {path : 'create', component: CreateComponent},
   {path : 'search', component: SearchComponent},
 ]
 

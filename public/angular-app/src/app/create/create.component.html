@@ -1,0 +1,24 @@
+<section class="h-100">
+  <h2 class="text-center border-bottom border-dark border-1 pb-4">Add Event</h2>
+  <form class="col-8 mx-auto" #usersForm="ngForm" (ngSubmit)="onSubmit(usersForm.value)">
+    <div>
+        <div class=" m-0 mb-3 p-0">
+            <label class="form-label">Name</label>
+            <input type="text" ngModel name="name" class="form-control" placeholder="name">
+        </div>
+        <div class=" m-0 mb-3 p-0">
+          <label class="form-label">Description</label>
+          <input type="text" ngModel name="description" class="form-control" placeholder="description">
+      </div>
+      <div class=" m-0 mb-3 p-0">
+        <label class="form-label">Location</label>
+        <input type="text" ngModel name="place" class="form-control" placeholder="Place">
+        <div class="d-flex mt-2 gap-1">
+          <input type="number" ngModel name="lat" class="form-control" placeholder="Latitude">
+          <input type="number" ngModel name="lng" class="form-control" placeholder="Longitude">
+        </div>
+    </div>
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">Submit</button>
+</form>
+</section>

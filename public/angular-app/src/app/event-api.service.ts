@@ -12,9 +12,7 @@ export class EventApiService {
   constructor(private http : HttpClient) { }
 
   public getEvents(query: string): Promise<Event[]> {
-    const url:string = this.#baseUrl + "events" + query;
-    console.log(url);
-    
+    const url:string = this.#baseUrl + "events" + query;    
     return this.http.get(url)
            .toPromise()
            .then(response => {
@@ -24,8 +22,41 @@ export class EventApiService {
            .catch(this.errorHandler)
   }
 
+  public getEvent(id : string): Promise<Event> {
+    const url:string = this.#baseUrl + "events/" + id;
+    return this.http.get(url)
+           .toPromise()
+           .then(response => {
+             return response as Event 
+           })
+           .catch(this.errorHandler)
+  }
+  
+  public createEvent(event : Event) : Promise<Event> {
+    const url:string = this.#baseUrl + "events/";
+    return this.http.post(url, event)
+          .toPromise()
+          .then(response => {
+            console.log(response);
+            return response as Event
+          })
+          .catch(this.errorHandler)
+  }
+
+    
+  public deleteEvent(id : string) : Promise<Event> {
+    const url:string = this.#baseUrl + "events/" + id;
+    return this.http.delete(url)
+          .toPromise()
+          .then(response => {
+            console.log(response);
+            return response as Event
+          })
+          .catch(this.errorHandler)
+  }
+
   private errorHandler(err : any):Promise<any> {
-    console.log("Error on get all", err);
-    return Promise.reject(err.message && err.message || err)
+    console.log("Error on event service", err);
+    return Promise.reject( err.message || err)
   }
 }

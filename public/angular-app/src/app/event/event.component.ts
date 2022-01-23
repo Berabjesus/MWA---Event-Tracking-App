@@ -1,4 +1,40 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
+
+import { AttendeeApiService } from '../attendee-api.service';
+import { EventApiService } from '../event-api.service';
+export class Attendee {
+  #_id : string;
+  #name: string;
+  #rsvp: string;
+
+  constructor(id :string, name :string, rsvp :string){
+    this.#_id =id;
+    this.#name =name;
+    this.#rsvp =rsvp;
+  }
+
+  get name(): string {
+    return this.#name;
+  }
+  set name(value: string) {
+    this.#name = value;
+  }
+
+  get _id() {return this.#_id}
+  set _id(id:any) {this.#_id = id}
+
+  get rsvp(): string {
+    return this.#rsvp;
+  }
+  set rsvp(value: string) {
+    this.#rsvp = value;
+  }
+
+}
+
+import { Event } from '../events/events.component';
 
 @Component({
   selector: 'app-event',
@@ -7,9 +43,79 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EventComponent implements OnInit {
 
-  constructor() { }
+  event!: Event;
+  attendees! : Attendee[];
+  queryString : string;
+  offset: number;
+  info: string;
 
-  ngOnInit(): void {
+  constructor(private eventService : EventApiService, private attendeeService : AttendeeApiService, private route: ActivatedRoute, private router : Router) { 
+    this.offset = 0
+    this.queryString = ""
+    this.info = ""
   }
 
+  ngOnInit(): void {
+    this.eventService.getEvent(this.route.snapshot.params["eventId"])
+    .then(response => {
+      this.event = response
+      this._getAllAttendees();
+    }).catch(this.errorHandler)
+
+  }
+
+  private _getAllAttendees() : void {
+    this.attendeeService.getAttendees(this.route.snapshot.params["eventId"], this.queryString)
+    .then(response => {
+      this.attendees = response;
+    })
+    .catch(this.errorHandler)
+  }
+
+  onDelete() :void {
+    console.log("test");
+    
+    this.eventService.deleteEvent(this.route.snapshot.params["eventId"])
+        .then(response => {
+          this.router.navigate(["events/"])
+        })
+        .catch(this.errorHandler)
+
+  }
+
+  onSubmit(data : any) :void {   
+    console.log(data);
+    
+    this.attendeeService.createAttendee(this.route.snapshot.params["eventId"], data)
+        .then(response => {
+          console.log(response);
+          this._getAllAttendees();
+        })
+        .catch(this.errorHandler)
+  }
+
+  prev() :void {
+    if (this.offset - 5 < 0 ) {
+      this.info = "This is the first page"
+      return;
+    }
+    this.info = ""
+    this.offset = this.offset - 5
+    this.queryString = "?offset=" + this.offset 
+    this._getAllAttendees();
+  }
+  next() :void {
+    if (this.attendees.length < 5 || this.attendees.length === 0) {
+      this.info = "This is the last page"
+      return;
+    }
+    this.info = ""
+    this.offset = this.offset + 5
+    this.queryString = "?offset=" + this.offset 
+    this._getAllAttendees();
+  }
+
+  private errorHandler(err : any) : void {
+    console.log("error at event", err);
+  }
 }

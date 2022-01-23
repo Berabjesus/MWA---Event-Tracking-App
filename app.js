@@ -14,6 +14,7 @@ app.use(express.static(path.join(__dirname, "public")))
 app.use("/api", function(req, res, next) {
   res.header("Access-Control-Allow-Origin", process.env.ALLOWED_URL)
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+  res.header("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE")
   next();
 })
 
