@@ -1,12 +1,17 @@
 const mongoose = require('mongoose');
-const {validateForPagination, validateForId } = require("../helpers/validation.helper")
+const {
+  validateForPagination,
+  validateForId
+} = require("../helpers/validation.helper")
 const {
   getResponse,
   postResponse,
   updateResponse,
   deleteResponse
 } = require("../helpers/response.helper");
-const { infoLogger } = require('../helpers/logger.helper');
+const {
+  infoLogger
+} = require('../helpers/logger.helper');
 const path = require("path");
 const req = require('express/lib/request');
 const fileName = path.basename(__filename)
@@ -30,7 +35,7 @@ const getAll = (req, res) => {
     return;
   }
 
-  const validationResponse = validateForPagination(count,offset,max,fileName)
+  const validationResponse = validateForPagination(count, offset, max, fileName)
   if (!validationResponse.ok) {
     res.status(400).json(validationResponse.message)
     return;
@@ -42,7 +47,9 @@ const getAll = (req, res) => {
 const _find = (Event, count, offset, req, res) => {
   let query = {}
   if (req.query.search) {
-    query = {name : req.query.search}
+    query = {
+      name: req.query.search
+    }
   }
 
   Event.find(query).select('-attendees').skip(offset).limit(count).exec(function (err, event) {
@@ -66,9 +73,9 @@ const _runGeoQuery = function (req, res) {
 
   const point = {
     type: "Point",
-    coordinates: [longitude,latitude]
+    coordinates: [longitude, latitude]
   };
-  
+
   Event.aggregate([{
     "$geoNear": {
       "near": point,
@@ -138,9 +145,9 @@ const fullUpdateCallback = (req, res, event) => {
   event.name = req.body.name
   event.description = req.body.description
   event.location = req.body.location
-  
+
   event.save(function (err, updatedEvent) {
-    const response = updateResponse(err, updatedEvent,fileName)
+    const response = updateResponse(err, updatedEvent, fileName)
     res.status(response.status).json(response.message)
   })
 }
@@ -151,7 +158,7 @@ const partialUpdateCallback = (req, res, event) => {
   event.location = req.body.location || event.location
 
   event.save(function (err, updatedEvent) {
-    const response = updateResponse(err, updatedEvent,fileName)
+    const response = updateResponse(err, updatedEvent, fileName)
     res.status(response.status).json(response.message)
   })
 }
@@ -165,13 +172,18 @@ const partialUpdateOne = (req, res) => {
 }
 
 const removeOne = (req, res) => {
-  const eventId = req.params.eventId  
+  const eventId = req.params.eventId
   Event.findByIdAndRemove(eventId).exec(function (err, event) {
-    const response = deleteResponse(err, event,fileName)
+    const response = deleteResponse(err, event, fileName)
     res.status(response.status).json(response.message);
   })
 }
 
 module.exports = {
-  getAll,getOne, addOne, removeOne, fullUpdateOne, partialUpdateOne
+  getAll,
+  getOne,
+  addOne,
+  removeOne,
+  fullUpdateOne,
+  partialUpdateOne
 }
