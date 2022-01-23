@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const attendeeSchema =  new mongoose.Schema({
+const attendeeSchema = new mongoose.Schema({
   name: {
     type: String,
     minlength: 2,
@@ -27,12 +27,18 @@ const eventsSchema = new mongoose.Schema({
     maxlength: 500,
   },
   location: {
-    type: String,
-    required: true
+    place: {
+      type: String,
+      required: true
+    },
+    // coordinates: {
+    //   type: [Number],
+    //   index: "2dsphere"
+    // }
   },
   attendees: [attendeeSchema]
-},{
+}, {
   versionKey: false,
-},);
+}, );
 
 mongoose.model(process.env.MODEL_NAME, eventsSchema, process.env.COLLECTION_NAME);

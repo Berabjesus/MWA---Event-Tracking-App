@@ -9,10 +9,10 @@
 
 ### Built With
 
--Nodejs
--express
--MongoDB
--Mongoose
+- Nodejs
+- express
+- MongoDB
+- Mongoose
 
 
 ### Author

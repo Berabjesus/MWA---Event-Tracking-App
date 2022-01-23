@@ -5,12 +5,13 @@ const attendeesController = require("../controllers/attendees.controller")
 
 router.route("/events")
   .get(eventsController.getAll)
-  .post(eventsController.create)
+  .post(eventsController.addOne)
 
 router.route("/events/:eventId")
   .get(eventsController.getOne)
-  .put(eventsController.fullUpdate)
-  .delete(eventsController.delete)
+  .put(eventsController.fullUpdateOne)
+  .patch(eventsController.partialUpdateOne)
+  .delete(eventsController.removeOne)
 
 router.route("/events/:eventId/attendees")
   .get(attendeesController.getAll)

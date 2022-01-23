@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 const path = require("path")
-const {validateForPagination} = require("../helpers/validator")
+const {validateForPagination} = require("../helpers/validator.helper")
 
 const {
   getResponse,
   postResponse,
   putResponse,
   deleteResponse
-} = require("../helpers/responseHandler")
+} = require("../helpers/responseHandler.helper")
 
 const notFoundMessage = (attendeeId) => {
   return {"message": "No attendees exist with the following id" + attendeeId}
