@@ -1,7 +1,9 @@
 const path = require("path")
-const {errorLogger} = require("./logger.helper")
+const {
+  errorLogger
+} = require("./logger.helper")
 
-const validateForPagination = (count, offset, max,fileName) => {
+const validateForPagination = (count, offset, max, fileName) => {
 
   const response = {
     ok: true,
@@ -26,15 +28,17 @@ const validateForPagination = (count, offset, max,fileName) => {
   return response;
 }
 
-const validateForId = (mongoose, idArray,fileName) => {
+const validateForId = (mongoose, idArray, fileName) => {
   const response = {
     ok: true,
     message: ""
   }
   idArray.forEach(id => {
     if (!mongoose.isValidObjectId(id)) {
-      const message = {error : process.env.ERROR_MSG_INVALID_ID}
-      errorLogger( fileName, message)
+      const message = {
+        error: process.env.ERROR_MSG_INVALID_ID
+      }
+      errorLogger(fileName, message)
       response.ok = false;
       response.message = message
     }

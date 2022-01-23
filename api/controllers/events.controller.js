@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
-const {validateForPagination, validateForId } = require("../helpers/validator.helper")
+const {validateForPagination, validateForId } = require("../helpers/validation.helper")
 const {
   getResponse,
   postResponse,
   updateResponse,
   deleteResponse
-} = require("../helpers/responseHandler.helper");
+} = require("../helpers/response.helper");
 const { infoLogger } = require('../helpers/logger.helper');
 const path = require("path")
 const fileName = path.basename(__filename)

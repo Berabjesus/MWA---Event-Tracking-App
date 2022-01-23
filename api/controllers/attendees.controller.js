@@ -3,14 +3,14 @@ const path = require("path")
 const {
   validateForPagination,
   validateForId
-} = require("../helpers/validator.helper")
+} = require("../helpers/validation.helper")
 
 const {
   getResponse,
   postResponse,
   updateResponse,
   deleteResponse
-} = require("../helpers/responseHandler.helper")
+} = require("../helpers/response.helper")
 
 const fileName = path.basename(__filename)
 
@@ -70,7 +70,9 @@ const getOne = (req, res) => {
 
     if (!response.message) {
       response.status = 404
-      response.message = {error : process.env.ERROR_MSG_SUB_DATA_NOT_FOUND}
+      response.message = {
+        error: process.env.ERROR_MSG_SUB_DATA_NOT_FOUND
+      }
     }
 
     res.status(response.status).json(response.message);
@@ -120,7 +122,9 @@ const _updateOne = (req, res, updateAttendeeCallback) => {
 
     const attendee = event.attendees.id(attendeeId)
     if (!attendee) {
-      res.status(404).json({error : process.env.ERROR_MSG_SUB_DATA_NOT_FOUND})
+      res.status(404).json({
+        error: process.env.ERROR_MSG_SUB_DATA_NOT_FOUND
+      })
       return;
     } else {
       updateAttendeeCallback(req, res, event, attendee)
@@ -168,7 +172,9 @@ const removeOne = (req, res) => {
 
     const attendee = event.attendees.id(attendeeId)
     if (!attendee) {
-      res.status(404).json({error : process.env.ERROR_MSG_SUB_DATA_NOT_FOUND})
+      res.status(404).json({
+        error: process.env.ERROR_MSG_SUB_DATA_NOT_FOUND
+      })
       return;
     }
 
