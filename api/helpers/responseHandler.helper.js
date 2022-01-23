@@ -71,6 +71,7 @@ const deleteResponse = (err, data, fileName) => {
     response = _noDataFoundHandler(fileName, response)
   } else {
     infoLogger(fileName, process.env.INFO_MSG_DATA_DELETED);
+    response.message = process.env.INFO_MSG_DATA_DELETED
   }
 
   return response;

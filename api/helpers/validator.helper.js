@@ -26,17 +26,20 @@ const validateForPagination = (count, offset, max,fileName) => {
   return response;
 }
 
-const validateForId = (mongoose, id) => {
+const validateForId = (mongoose, idArray,fileName) => {
   const response = {
     ok: true,
     message: ""
   }
-  if (!mongoose.isValidObjectId(id)) {
-    const message = process.env.ERROR_MSG_INVALID_ID
-    errorLogger( fileName, message)
-    response.ok = false;
-    response.message = message
-  }
+  idArray.forEach(id => {
+    if (!mongoose.isValidObjectId(id)) {
+      const message = {error : process.env.ERROR_MSG_INVALID_ID}
+      errorLogger( fileName, message)
+      response.ok = false;
+      response.message = message
+    }
+  });
+
   return response
 }
 

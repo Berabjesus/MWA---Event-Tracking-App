@@ -15,7 +15,7 @@ const Event = mongoose.model('Event');
 const getAll = (req, res) => {
   let count = parseInt(process.env.GET_ALL_EVENTS_DEFAULT_COUNT, 10);
   let offset = parseInt(process.env.GET_ALL_EVENTS_DEFAULT_OFFSET, 10);
-  const max = parseInt(process.env.GET_ALL_ATTENDEES_MAX_COUNT, 10)
+  const max = parseInt(process.env.GET_ALL_EVENTS_MAX_COUNT, 10)
 
   if (req.query.count) {
     count = parseInt(req.query.count);
@@ -83,9 +83,10 @@ const _runGeoQuery = function (req, res) {
 const getOne = (req, res) => {
   const eventId = req.params.eventId;
 
-  const idValidation = validateForId(mongoose, eventId)
+  const idValidation = validateForId(mongoose, [eventId], fileName)
   if (!idValidation.ok) {
     res.status(400).json(idValidation.message)
+    return
   }
 
   Event.findById(eventId).select('-attendees').exec(function (err, event) {
@@ -111,9 +112,10 @@ const addOne = (req, res) => {
 const _updateOne = (req, res, updateEventCallback) => {
   const eventId = req.params.eventId
 
-  const idValidation = validateForId(mongoose, eventId)
+  const idValidation = validateForId(mongoose, [eventId], fileName)
   if (!idValidation.ok) {
     res.status(400).json(idValidation.message)
+    return
   }
 
   Event.findById(eventId).select('-attendees').exec(function (err, event) {

@@ -41,4 +41,4 @@ const eventsSchema = new mongoose.Schema({
   versionKey: false,
 }, );
 
-mongoose.model(process.env.MODEL_NAME, eventsSchema, process.env.COLLECTION_NAME);
+mongoose.model(process.env.MAIN_MODEL_NAME, eventsSchema, process.env.MAIN_COLLECTION_NAME);

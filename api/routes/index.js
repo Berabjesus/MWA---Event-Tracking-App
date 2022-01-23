@@ -15,12 +15,13 @@ router.route("/events/:eventId")
 
 router.route("/events/:eventId/attendees")
   .get(attendeesController.getAll)
-  .post(attendeesController.create)
+  .post(attendeesController.addOne)
 
 router.route("/events/:eventId/attendees/:attendeeId")
   .get(attendeesController.getOne)
-  .put(attendeesController.fullUpdate)
-  .delete(attendeesController.delete)
+  .put(attendeesController.fullUpdateOne)
+  .patch(attendeesController.partialUpdateOne)
+  .delete(attendeesController.removeOne)
 
 
 module.exports = router;
