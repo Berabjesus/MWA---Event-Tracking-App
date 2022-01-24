@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 import { Attendee } from './event/event.component';
-
 @Injectable({
   providedIn: 'root'
 })
 export class AttendeeApiService {
-  #baseUrl: string = 'http://localhost:3000/api/events/';
+  #baseUrl: string = environment.attendeeApiURL;
 
   constructor(private http : HttpClient) { }
 
@@ -28,6 +28,17 @@ export class AttendeeApiService {
     return this.http.post(url, attendee)
           .toPromise()
           .then(response => {
+            return response as Attendee
+          })
+          .catch(this.errorHandler)
+  }
+
+  public deleteAttendee(evemtId : string, attendeeId : string) : Promise<Attendee> {
+    const url:string = this.#baseUrl + evemtId + "/attendees/" + attendeeId;
+    return this.http.delete(url)
+          .toPromise()
+          .then(response => {
+            console.log(response);
             return response as Attendee
           })
           .catch(this.errorHandler)

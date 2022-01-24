@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 import { Event } from './events/events.component';
 
@@ -7,7 +8,7 @@ import { Event } from './events/events.component';
   providedIn: 'root'
 })
 export class EventApiService {
-  #baseUrl: string = 'http://localhost:3000/api/';
+  #baseUrl: string = environment.eventApiURL;
 
   constructor(private http : HttpClient) { }
 
@@ -37,7 +38,6 @@ export class EventApiService {
     return this.http.post(url, event)
           .toPromise()
           .then(response => {
-            console.log(response);
             return response as Event
           })
           .catch(this.errorHandler)
@@ -50,7 +50,6 @@ export class EventApiService {
           .toPromise()
           .then(response => {
             console.log(response);
-            return response as Event
           })
           .catch(this.errorHandler)
   }

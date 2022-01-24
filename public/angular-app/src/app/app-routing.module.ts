@@ -6,6 +6,7 @@ import { SearchComponent } from "./search/search.component";
 import { EventsComponent } from "./events/events.component";
 import { EventComponent } from "./event/event.component";
 import { CreateComponent } from "./create/create.component";
+import { ErrorPageComponent } from './error-page/error-page.component';
 
 const routes: Routes = [
   {path : '', component: HomeComponent},
@@ -13,6 +14,7 @@ const routes: Routes = [
   {path : 'events/:eventId', component: EventComponent},
   {path : 'create', component: CreateComponent},
   {path : 'search', component: SearchComponent},
+  {path : '**', component: ErrorPageComponent},
 ]
 
 @NgModule({

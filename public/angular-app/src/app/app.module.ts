@@ -6,23 +6,23 @@ import { FormsModule } from '@angular/forms';
 import { AppRouterModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
-import { FooterComponent } from './footer/footer.component';
 import { NavigationComponent } from './navigation/navigation.component';
 import { EventsComponent } from './events/events.component';
 import { SearchComponent } from './search/search.component';
 import { EventComponent } from './event/event.component';
 import { CreateComponent } from './create/create.component';
+import { ErrorPageComponent } from './error-page/error-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    FooterComponent,
     NavigationComponent,
     EventsComponent,
     SearchComponent,
     EventComponent,
-    CreateComponent
+    CreateComponent,
+    ErrorPageComponent
   ],
   imports: [
     BrowserModule,

@@ -6,10 +6,10 @@
       <h5 class="card-title h3">Name of Event : {{event.name}}</h5>
       <p class="card-text">Description : {{event.description}}</p>
       <p class="card-text">Place : {{event.location.place}}</p>
-      <p class="card-text">Location : {{event.location && event.location.coordinates}}</p>
+      <p class="card-text">Location Coordinates : {{event.location && event.location.coordinates}}</p>
       <div class="d-flex gap-5">
         <button  class="btn btn-primary">Update</button>
-        <button  (click)="onDelete()" class="btn btn-danger">Delete</button>
+        <button  (click)="onEventDelete()" class="btn btn-danger">Delete</button>
       </div>
     </div>
   </div>
@@ -46,6 +46,7 @@
       <div class="text-decoration-none card-body">
         <p class="h6 card-title text-decoration-none">rsvp: {{attendee.rsvp}}</p>
       </div>
+      <button class="align-self-start ms-3 mb-3 btn btn-danger" (click) = "onDeleteAttendee(attendee._id)">delete</button>
     </div>
   </div>
   <div class="bg-danger text-white">

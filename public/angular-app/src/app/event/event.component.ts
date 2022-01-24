@@ -72,7 +72,7 @@ export class EventComponent implements OnInit {
     .catch(this.errorHandler)
   }
 
-  onDelete() :void {
+  onEventDelete() :void {
     console.log("test");
     
     this.eventService.deleteEvent(this.route.snapshot.params["eventId"])
@@ -89,6 +89,14 @@ export class EventComponent implements OnInit {
     this.attendeeService.createAttendee(this.route.snapshot.params["eventId"], data)
         .then(response => {
           console.log(response);
+          this._getAllAttendees();
+        })
+        .catch(this.errorHandler)
+  }
+
+  onDeleteAttendee(id: string) :void {
+    this.attendeeService.deleteAttendee(this.route.snapshot.params["eventId"], id)
+        .then(response => {
           this._getAllAttendees();
         })
         .catch(this.errorHandler)
