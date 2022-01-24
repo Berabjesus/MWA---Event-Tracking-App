@@ -1,23 +1,47 @@
 <section>
-  <h2 class="text-center border-bottom border-dark border-1 pb-4">{{event.name }}</h2>
+  <h2 class="text-center border-bottom border-dark border-1 pb-4">{{event && event.name }}</h2>
 
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title h3">Name of Event : {{event.name}}</h5>
-      <p class="card-text">Description : {{event.description}}</p>
-      <p class="card-text">Place : {{event.location.place}}</p>
-      <p class="card-text">Location Coordinates : {{event.location && event.location.coordinates}}</p>
+      <h5 class="card-title h3">Name of Event : {{event && event.name}}</h5>
+      <p class="card-text">Description : {{event && event.description}}</p>
+      <p class="card-text">Place : {{event && event.location.place}}</p>
+      <p class="card-text">Location Coordinates : {{event && event.location && event.location.coordinates}}</p>
       <div class="d-flex gap-5">
-        <button  class="btn btn-primary">Update</button>
+        <button  (click)="onShowUpdateForm()" class="btn btn-primary">Update</button>
         <button  (click)="onEventDelete()" class="btn btn-danger">Delete</button>
       </div>
     </div>
   </div>
 </section>
 
+<section class="border border-3 border-dark p-3 mt-5" *ngIf="showUpdateForm">
+  <h2 class="text-center border-bottom border-dark border-1 pb-4">Update Event</h2>
+  <form class="col-8 mx-auto" #usersForm="ngForm" (ngSubmit)="onEventUpdate(usersForm.value)">
+    <div>
+        <div class=" m-0 mb-3 p-0">
+            <label class="form-label">Name</label>
+            <input type="text" [(ngModel)]="event.name" name="name" class="form-control" placeholder="name">
+        </div>
+        <div class=" m-0 mb-3 p-0">
+          <label class="form-label">Description</label>
+          <input type="text" [(ngModel)]="event.description" name="description" class="form-control" placeholder="description">
+      </div>
+      <div class=" m-0 mb-3 p-0">
+        <label class="form-label">Location</label>
+        <input type="text" [(ngModel)]="event.location.place" name="place" class="form-control" placeholder="Place">
+        <div class="d-flex mt-2 gap-1">
+          <input type="text" [(ngModel)]="event.location.coordinates" name="coordinates" class="form-control" placeholder="coordinates comma separated">
+        </div>
+    </div>
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">update</button>
+</form>
+</section>
+
 <section class="border border-3 border-dark p-3 mt-5">
   <h2 class="text-center border-bottom border-dark border-1 pb-4">Add Attendee</h2>
-  <form class="col-10 mx-auto d-flex flex-column"  #usersForm="ngForm" (ngSubmit)="onSubmit(usersForm.value)">
+  <form class="col-10 mx-auto d-flex flex-column"  #usersForm="ngForm" (ngSubmit)="onAddAttendee(usersForm.value)">
     <div class="d-flex gap-4">
         <div class=" m-0 mb-3 p-0 d-flex gap-3">
             <label class="form-label">Name</label>
@@ -41,10 +65,10 @@
   <div class=" attendees p-3">
     <div class="card event mb-2 shadow" *ngFor="let attendee of attendees">
       <div class="text-decoration-none card-body">
-        <p class="h6 card-title text-decoration-none">name: {{attendee.name}}</p>
+        <p class="h6 card-title text-decoration-none">name: {{attendee && attendee.name}}</p>
       </div>
       <div class="text-decoration-none card-body">
-        <p class="h6 card-title text-decoration-none">rsvp: {{attendee.rsvp}}</p>
+        <p class="h6 card-title text-decoration-none">rsvp: {{attendee && attendee.rsvp}}</p>
       </div>
       <button class="align-self-start ms-3 mb-3 btn btn-danger" (click) = "onDeleteAttendee(attendee._id)">delete</button>
     </div>

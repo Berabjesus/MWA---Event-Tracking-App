@@ -48,11 +48,13 @@ export class EventComponent implements OnInit {
   queryString : string;
   offset: number;
   info: string;
+  showUpdateForm:boolean;
 
   constructor(private eventService : EventApiService, private attendeeService : AttendeeApiService, private route: ActivatedRoute, private router : Router) { 
     this.offset = 0
     this.queryString = ""
     this.info = ""
+    this.showUpdateForm = false;
   }
 
   ngOnInit(): void {
@@ -72,9 +74,7 @@ export class EventComponent implements OnInit {
     .catch(this.errorHandler)
   }
 
-  onEventDelete() :void {
-    console.log("test");
-    
+  onEventDelete() :void {    
     this.eventService.deleteEvent(this.route.snapshot.params["eventId"])
         .then(response => {
           this.router.navigate(["events/"])
@@ -83,15 +83,22 @@ export class EventComponent implements OnInit {
 
   }
 
-  onSubmit(data : any) :void {   
-    console.log(data);
-    
+  onAddAttendee(data : any) :void {       
     this.attendeeService.createAttendee(this.route.snapshot.params["eventId"], data)
         .then(response => {
-          console.log(response);
           this._getAllAttendees();
         })
         .catch(this.errorHandler)
+  }
+
+  onEventUpdate(data : any) :void {
+    this.eventService.updateEvent(this.route.snapshot.params["eventId"], data)
+        .then(response => {
+          this.router.navigate(["events/" + this.route.snapshot.params["eventId"]])
+          this.showUpdateForm = false
+        })
+        .catch(this.errorHandler)
+    
   }
 
   onDeleteAttendee(id: string) :void {
@@ -100,6 +107,10 @@ export class EventComponent implements OnInit {
           this._getAllAttendees();
         })
         .catch(this.errorHandler)
+  }
+
+  onShowUpdateForm() :void {
+    this.showUpdateForm = true
   }
 
   prev() :void {

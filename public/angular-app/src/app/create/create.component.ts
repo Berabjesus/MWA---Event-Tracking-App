@@ -21,14 +21,12 @@ export class CreateComponent implements OnInit {
     }    
     this.eventService.createEvent(data)
         .then(response => {
-          console.log(response);
           this.router.navigate(["events/"+response._id])
         })
         .catch(this.errorHandler)
   }
 
   private errorHandler(err : any):Promise<any> {
-    console.log("Error on create", err);
     return Promise.reject( err.message || err)
   }
 

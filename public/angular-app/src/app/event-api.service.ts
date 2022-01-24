@@ -28,6 +28,7 @@ export class EventApiService {
     return this.http.get(url)
            .toPromise()
            .then(response => {
+            console.log(response);
              return response as Event 
            })
            .catch(this.errorHandler)
@@ -38,6 +39,18 @@ export class EventApiService {
     return this.http.post(url, event)
           .toPromise()
           .then(response => {
+            console.log(response);
+            return response as Event
+          })
+          .catch(this.errorHandler)
+  }
+
+  public updateEvent(id:string, event : Event) : Promise<Event> {
+    const url:string = this.#baseUrl + "events/" + id;
+    return this.http.patch(url, event)
+          .toPromise()
+          .then(response => {
+            console.log(response);
             return response as Event
           })
           .catch(this.errorHandler)

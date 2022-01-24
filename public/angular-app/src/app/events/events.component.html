@@ -1,6 +1,7 @@
 <section class="h-100">
   <h2 class="text-center border-bottom border-dark border-1 pb-4">Events</h2>
   <div>
+    <h5 class="text-info">To update or delete an event or to perform CRUD operations on the attendees please click on an event  </h5>
     <div class="card event mb-2" *ngFor="let event of events">
         <a routerLink="/events/{{event._id}}" class="text-decoration-none card-body shadow" >
             <p class="h6 card-title text-decoration-none">{{event.name}}</p>

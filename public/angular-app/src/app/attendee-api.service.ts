@@ -16,6 +16,7 @@ export class AttendeeApiService {
     return this.http.get(url)
            .toPromise()
            .then(response => {
+            console.log(response);
              return response as Attendee[] 
            })
            .catch(this.errorHandler)
@@ -28,13 +29,25 @@ export class AttendeeApiService {
     return this.http.post(url, attendee)
           .toPromise()
           .then(response => {
+            console.log(response);
             return response as Attendee
           })
           .catch(this.errorHandler)
   }
 
-  public deleteAttendee(evemtId : string, attendeeId : string) : Promise<Attendee> {
-    const url:string = this.#baseUrl + evemtId + "/attendees/" + attendeeId;
+  public updateAttendee(eventId : string, attendeeId : string, data : Attendee) : Promise<Event> {
+    const url:string = this.#baseUrl + eventId + "/attendees/" + attendeeId;
+    return this.http.patch(url, data)
+          .toPromise()
+          .then(response => {
+            console.log(response);
+            return response as Event
+          })
+          .catch(this.errorHandler)
+  }
+
+  public deleteAttendee(eventId : string, attendeeId : string) : Promise<Attendee> {
+    const url:string = this.#baseUrl + eventId + "/attendees/" + attendeeId;
     return this.http.delete(url)
           .toPromise()
           .then(response => {
