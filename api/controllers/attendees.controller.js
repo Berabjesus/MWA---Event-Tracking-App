@@ -31,7 +31,7 @@ const getAll = (req, res) => {
 
   const validationResponse = validateForPagination(count, offset, max, fileName)
   if (!validationResponse.ok) {
-    res.status(400).json(validationResponse.message)
+    res.status(process.env.STATUS_BAD_REQUEST).json(validationResponse.message)
     return;
   }
 
@@ -42,7 +42,7 @@ const getAll = (req, res) => {
 const _findById = (Event, count, offset, eventId, res) => {
   Event.findById(eventId).select('attendees').slice('attendees', [offset, count]).exec(function (err, data) {
     const response = getResponse(err, data, fileName)
-    if (response.status === 200) {
+    if (response.status === process.env.STATUS_OK) {
       response.message = response.message.attendees
     }
     res.status(response.status).json(response.message);
@@ -55,13 +55,13 @@ const getOne = (req, res) => {
 
   const idValidation = validateForId(mongoose, [eventId, attendeeId], fileName)
   if (!idValidation.ok) {
-    res.status(400).json(idValidation.message)
+    res.status(process.env.STATUS_BAD_REQUEST).json(idValidation.message)
     return
   }
 
   Event.findById(eventId).select('attendees').exec(function (err, data) {
     const response = getResponse(err, data, fileName)
-    if (response.status != 200) {
+    if (response.status != process.env.STATUS_OK) {
       res.status(response.status).json(response.message);
       return;
     }
@@ -69,7 +69,7 @@ const getOne = (req, res) => {
     response.message = response.message.attendees.id(attendeeId)
 
     if (!response.message) {
-      response.status = 404
+      response.status = process.env.STATUS_NOT_FOUND
       response.message = {
         error: process.env.ERROR_MSG_SUB_DATA_NOT_FOUND
       }
@@ -85,7 +85,7 @@ const addOne = (req, res) => {
   Event.findById(eventId).select('attendees').exec(function (err, data) {
 
     const response = getResponse(err, data, fileName)
-    if (response.status >= 400) {
+    if (response.status >= process.env.STATUS_BAD_REQUEST) {
       res.status(response.status).json(response.message);
       return;
     }
@@ -110,19 +110,19 @@ const _updateOne = (req, res, updateAttendeeCallback) => {
 
   const idValidation = validateForId(mongoose, [eventId, attendeeId], fileName)
   if (!idValidation.ok) {
-    res.status(400).json(idValidation.message)
+    res.status(process.env.STATUS_BAD_REQUEST).json(idValidation.message)
     return
   }
 
   Event.findById(eventId).select('attendees').exec(function (err, event) {
     const response = getResponse(err, event, fileName)
-    if (response.status !== 200) {
+    if (response.status !== process.env.STATUS_OK) {
       res.status(response.status).json(response.message)
     }
 
     const attendee = event.attendees.id(attendeeId)
     if (!attendee) {
-      res.status(404).json({
+      res.status(process.env.STATUS_NOT_FOUND).json({
         error: process.env.ERROR_MSG_SUB_DATA_NOT_FOUND
       })
       return;
@@ -165,14 +165,14 @@ const removeOne = (req, res) => {
   const attendeeId = req.params.attendeeId
   Event.findById(eventId).select('attendees').exec(function (err, event) {
     const response = getResponse(err, event, fileName)
-    if (response.status != 200) {
+    if (response.status != process.env.STATUS_OK) {
       res.status(response.status).json(response.message);
       return;
     }
 
     const attendee = event.attendees.id(attendeeId)
     if (!attendee) {
-      res.status(404).json({
+      res.status(process.env.STATUS_NOT_FOUND).json({
         error: process.env.ERROR_MSG_SUB_DATA_NOT_FOUND
       })
       return;

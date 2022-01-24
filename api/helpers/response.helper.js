@@ -3,7 +3,7 @@ const path = require("path")
 
 const _errorHandler = (err, fileName, response) => {
   errorLogger(err, fileName)
-  response.status = 500;
+  response.status = process.env.STATUS_INTERNAL_ERROR;
   response.message = {
     error : err.message || err
   }
@@ -13,7 +13,7 @@ const _errorHandler = (err, fileName, response) => {
 const _noDataFoundHandler = (fileName, response) => {
   const message = process.env.ERROR_MSG_DATA_NOT_FOUND
   errorLogger(message, fileName);
-  response.status = 404;
+  response.status = process.env.STATUS_NOT_FOUND;
   response.message = {
     error : message
   }
@@ -22,7 +22,7 @@ const _noDataFoundHandler = (fileName, response) => {
 
 const getResponse = (err, data, fileName) => {
   let response = {
-    status: 200,
+    status: process.env.STATUS_OK,
     message: data
   }
 
@@ -37,7 +37,7 @@ const getResponse = (err, data, fileName) => {
 
 const postResponse = (err, data, fileName) => {
   let response = {
-    status: 201,
+    status: process.env.STATUS_CREATED,
     message: data
   }
 
@@ -49,7 +49,7 @@ const postResponse = (err, data, fileName) => {
 
 const updateResponse = (err, data, fileName) => {
   let response = {
-    status: 202,
+    status: process.env.STATUS_ACCEPTED,
     message: data
   }
 
@@ -61,7 +61,7 @@ const updateResponse = (err, data, fileName) => {
 
 const deleteResponse = (err, data, fileName) => {
   let response = {
-    status: 204,
+    status: process.env.STATUS_NO_CONTENT,
     message: data,
   };
 

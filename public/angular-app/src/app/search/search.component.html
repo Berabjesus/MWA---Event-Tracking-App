@@ -1,1 +1,49 @@
-<p>search works!</p>
+<section class="border border-3 border-dark p-3">
+  <h2 class="text-center border-bottom border-dark border-1 pb-4">Search</h2>
+
+  <form class="col-10 mx-auto d-flex flex-column justify-content-center" #usersForm="ngForm" (ngSubmit)="onSubmit(usersForm.value)">
+    <div class="d-flex gap-4">
+      <div class=" m-0 mb-3 p-0 d-flex gap-3">
+        <label class="form-label">Search by</label>
+        <select ngModel name="filter" id="rsvp">
+          <option value="name">Event name</option>
+          <option value="place">Event place</option>
+          <option value="coordinate">Coordinate</option>
+        </select>
+      </div>
+      <div class=" m-0 mb-3 p-0 d-flex gap-3">
+        <input type="text" ngModel name="search" class="form-control" placeholder="Type Search here">
+      </div>
+    </div>
+    <div class=" m-0 mb-3 p-0 d-flex gap-3">
+      <label class="form-label">coordinates</label>
+      <div class=" m-0 mb-3 p-0 d-flex gap-3">
+        <input type="number" ngModel name="lat" class="form-control" placeholder="lat">
+        <input type="number" ngModel name="lng" class="form-control" placeholder="long">
+      </div>
+    </div>
+    <div class=" text-white">
+      <h5 class="text-danger">{{info}}</h5>
+    </div>
+    <button type="submit" class="btn btn-primary mt-2 mx-auto">Search</button>
+  </form>
+</section>
+
+<section class="border-top border-dark border-3 pt-3 mt-3">
+  <h2 class="text-center border-bottom border-dark border-1 pb-4">Events</h2>
+  <h2 class="text-center border-bottom border-dark border-1 pb-4">{{searchInfo}}</h2>
+  <div>
+    <div class="card event mb-2" *ngFor="let event of events">
+        <a routerLink="/events/{{event._id}}" class="text-decoration-none card-body shadow" >
+            <p class="h6 card-title text-decoration-none">{{event.name}}</p>
+        </a>
+    </div>
+  </div>
+  <div class="bg-danger text-white">
+    <h5 >{{pagInfo}}</h5>
+  </div>
+  <div class="d-flex gap-3 mt-3">
+    <button class="btn btn-dark" (click)="prev()">Prev</button>
+    <button class="btn btn-dark" (click)="next()">Next</button>
+  </div>
+</section>

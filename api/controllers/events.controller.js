@@ -37,7 +37,7 @@ const getAll = (req, res) => {
 
   const validationResponse = validateForPagination(count, offset, max, fileName)
   if (!validationResponse.ok) {
-    res.status(400).json(validationResponse.message)
+    res.status(process.env.STATUS_BAD_REQUEST).json(validationResponse.message)
     return;
   }
 
@@ -47,9 +47,16 @@ const getAll = (req, res) => {
 const _find = (Event, count, offset, req, res) => {
   let query = {}
   if (req.query.search) {
-    query = {
-      name: req.query.search
+    if (req.query.place) {
+      query = {
+        "location.place": req.query.search
+      }
+    } else {
+      query = {
+        name: req.query.search
+      }
     }
+
   }
 
   Event.find(query).select('-attendees').skip(offset).limit(count).exec(function (err, event) {
@@ -66,12 +73,12 @@ const _runGeoQuery = function (req, res) {
   const maxDistance = parseFloat(process.env.GEO_SEARCH_MAX_DIST, 10)
 
   if (longitude < -180 || longitude > 180 || latitude < -90 || latitude > 90) {
-    res.status(400).json({error: "Coordinte error"})
+    res.status(process.env.STATUS_BAD_REQUEST).json({error: "Coordinte error"})
   }
 
   if (distance > maxDistance) {
     const message = process.env.ERROR_MSG_EXCEED_MAX_DISTANCE
-    res.status(400).json(message)
+    res.status(process.env.STATUS_BAD_REQUEST).json(message)
     return
   }
 
@@ -102,7 +109,7 @@ const getOne = (req, res) => {
 
   const idValidation = validateForId(mongoose, [eventId], fileName)
   if (!idValidation.ok) {
-    res.status(400).json(idValidation.message)
+    res.status(process.env.STATUS_BAD_REQUEST).json(idValidation.message)
     return
   }
 
@@ -132,13 +139,13 @@ const _updateOne = (req, res, updateEventCallback) => {
 
   const idValidation = validateForId(mongoose, [eventId], fileName)
   if (!idValidation.ok) {
-    res.status(400).json(idValidation.message)
+    res.status(process.env.STATUS_BAD_REQUEST).json(idValidation.message)
     return
   }
 
   Event.findById(eventId).select('-attendees').exec(function (err, event) {
     const response = getResponse(err, event, fileName)
-    if (response.status !== 200) {
+    if (response.status !== process.env.STATUS_OK) {
       res.status(response.status).json(response.message)
     } else {
       updateEventCallback(req, res, event)

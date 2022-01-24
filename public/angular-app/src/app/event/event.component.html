@@ -15,7 +15,7 @@
   </div>
 </section>
 
-<section >
+<section class="border border-3 border-dark p-3 mt-5">
   <h2 class="text-center border-bottom border-dark border-1 pb-4">Add Attendee</h2>
   <form class="col-10 mx-auto d-flex flex-column"  #usersForm="ngForm" (ngSubmit)="onSubmit(usersForm.value)">
     <div class="d-flex gap-4">
@@ -28,6 +28,7 @@
           <select ngModel name="rsvp" id="rsvp">
             <option value="yes">yes</option>
             <option value="no">no</option>
+            <option value="no">may be</option>
           </select>
       </div>
     </div>
@@ -55,4 +56,5 @@
     <button class="btn btn-dark" (click)="next()">Next</button>
   </div>
 </section>
+
 
