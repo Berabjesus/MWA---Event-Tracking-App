@@ -28,7 +28,7 @@ export class CreateComponent implements OnInit {
   }
 
   private errorHandler(err : any):Promise<any> {
-    console.log("Error on get all", err);
+    console.log("Error on create", err);
     return Promise.reject( err.message || err)
   }
 

@@ -47,7 +47,25 @@ const validateForId = (mongoose, idArray, fileName) => {
   return response
 }
 
+const validateForCoordinates= (lat , lng,fileName) => {
+  const response = {
+    ok: true,
+    message: ""
+  }
+  if (lng < -180 || lng > 180 || lat < -90 || lat > 90) {
+    const message = {
+      error: process.env.ERROR_MSG_INVALID_COORDINATE
+    }
+    errorLogger(fileName, message)
+    response.ok = false;
+    response.message = message
+  }
+
+  return response
+}
+
 module.exports = {
   validateForPagination,
-  validateForId
+  validateForId,
+  validateForCoordinates
 }

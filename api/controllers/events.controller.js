@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const {
   validateForPagination,
-  validateForId
+  validateForId,
+  validateForCoordinates
 } = require("../helpers/validation.helper")
 const {
   getResponse,
@@ -72,8 +73,11 @@ const _runGeoQuery = function (req, res) {
   const distance = parseFloat(req.query.dist, 10);
   const maxDistance = parseFloat(process.env.GEO_SEARCH_MAX_DIST, 10)
 
-  if (longitude < -180 || longitude > 180 || latitude < -90 || latitude > 90) {
-    res.status(process.env.STATUS_BAD_REQUEST).json({error: "Coordinte error"})
+
+  const coordinateValidation = validateForCoordinates(latitude, longitude, fileName)
+  if (!coordinateValidation.ok) {
+    res.status(process.env.STATUS_BAD_REQUEST).json(coordinateValidation.message)
+    return;
   }
 
   if (distance > maxDistance) {
@@ -127,6 +131,17 @@ const addOne = (req, res) => {
     location: req.body.location,
     attendees: req.body.attendees
   }
+  console.log(event.location.coordinates);
+  if (event.location && event.location.coordinates) {
+    const coordinateValidation = validateForCoordinates(event.location.coordinates[0], event.location.coordinates[1],fileName)
+    if (!coordinateValidation.ok) {
+      res.status(process.env.STATUS_BAD_REQUEST).json(coordinateValidation.message)
+      return;
+    }
+  }
+
+
+
 
   Event.create(event, function (err, event) {
     const response = postResponse(err, event, fileName)
